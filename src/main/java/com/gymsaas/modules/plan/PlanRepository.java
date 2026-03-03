@@ -12,4 +12,6 @@ public interface PlanRepository extends JpaRepository<Plan, UUID> {
     List<Plan> findByGymIdAndActiveTrueAndPublicPlanTrue(UUID gymId);
 
     Optional<Plan> findByIdAndGymId(UUID id, UUID gymId);
+
+    boolean existsByGymIdAndName(UUID gymId, String name);
 }
