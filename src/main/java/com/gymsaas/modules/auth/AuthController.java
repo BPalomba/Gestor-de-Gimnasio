@@ -2,6 +2,7 @@ package com.gymsaas.modules.auth;
 
 import com.gymsaas.modules.auth.dto.AuthResponse;
 import com.gymsaas.modules.auth.dto.LoginRequest;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor
+@Tag(name = "Autenticación", description = "Login y refresh de tokens")
 public class AuthController {
 
     private final AuthService authService;
