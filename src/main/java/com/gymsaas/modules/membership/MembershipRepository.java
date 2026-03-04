@@ -27,4 +27,8 @@ public interface MembershipRepository extends JpaRepository<Membership, UUID> {
     List<Membership> findExpiringBetween(@Param("gymId") UUID gymId,
                                          @Param("from") LocalDate from,
                                          @Param("to") LocalDate to);
+
+    // buscar membresías vencidas para el cron job
+    List<Membership> findByStatusAndEndDateBefore(
+            Membership.MembershipStatus status, LocalDate date);
 }
