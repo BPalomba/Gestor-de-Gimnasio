@@ -5,6 +5,7 @@ import com.gymsaas.modules.member.dto.MemberResponse;
 import com.gymsaas.modules.member.dto.UpdateMemberRequest;
 import com.gymsaas.shared.dto.ApiResponse;
 import com.gymsaas.shared.security.GymContextHolder;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +25,7 @@ public class MemberController {
 
     private final MemberService memberService;
 
+    @Operation(summary = "Listar socios")
     @GetMapping
     @PreAuthorize("hasAnyRole('OWNER','ADMIN','STAFF')")
     public ResponseEntity<ApiResponse<Page<MemberResponse>>> findAll(
@@ -35,6 +37,7 @@ public class MemberController {
                 ApiResponse.ok(memberService.findAll(gymId, status, pageable)));
     }
 
+    @Operation(summary = "Buscar socios")
     @GetMapping("/search")
     @PreAuthorize("hasAnyRole('OWNER','ADMIN','STAFF')")
     public ResponseEntity<ApiResponse<Page<MemberResponse>>> search(
@@ -46,6 +49,7 @@ public class MemberController {
                 ApiResponse.ok(memberService.search(gymId, q, pageable)));
     }
 
+    @Operation(summary = "Obtener socio por ID")
     @GetMapping("/{id}")
     @PreAuthorize("hasAnyRole('OWNER','ADMIN','STAFF')")
     public ResponseEntity<ApiResponse<MemberResponse>> findById(
@@ -56,6 +60,7 @@ public class MemberController {
                 ApiResponse.ok(memberService.findById(gymId, id)));
     }
 
+    @Operation(summary = "Crear socio")
     @PostMapping
     @PreAuthorize("hasAnyRole('OWNER','ADMIN')")
     public ResponseEntity<ApiResponse<MemberResponse>> create(
@@ -67,6 +72,7 @@ public class MemberController {
                 .body(ApiResponse.created(memberService.create(gymId, req)));
     }
 
+    @Operation(summary = "Actualizar socio")
     @PutMapping("/{id}")
     @PreAuthorize("hasAnyRole('OWNER','ADMIN')")
     public ResponseEntity<ApiResponse<MemberResponse>> update(
@@ -78,6 +84,7 @@ public class MemberController {
                 ApiResponse.ok(memberService.update(gymId, id, req)));
     }
 
+    @Operation(summary = "Suspender socio")
     @PatchMapping("/{id}/suspend")
     @PreAuthorize("hasAnyRole('OWNER','ADMIN')")
     public ResponseEntity<Void> suspend(@PathVariable UUID id) {
@@ -85,6 +92,7 @@ public class MemberController {
         return ResponseEntity.noContent().build();
     }
 
+    @Operation(summary = "Reactivar socio")
     @PatchMapping("/{id}/reactivate")
     @PreAuthorize("hasAnyRole('OWNER','ADMIN')")
     public ResponseEntity<Void> reactivate(@PathVariable UUID id) {
@@ -92,6 +100,7 @@ public class MemberController {
         return ResponseEntity.noContent().build();
     }
 
+    @Operation(summary = "Cancelar socio")
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('OWNER')")
     public ResponseEntity<Void> cancel(@PathVariable UUID id) {
