@@ -1,6 +1,5 @@
 package com.gymsaas.modules.member.dto;
 
-import com.gymsaas.modules.member.Member.MemberStatus;
 import lombok.Getter;
 import lombok.Setter;
 import java.time.LocalDate;
@@ -18,7 +17,8 @@ public class MemberResponse {
     private String email;
     private String phone;
     private LocalDate      birthDate;
-    private MemberStatus   status;
+    private String statusCode;
+    private String statusDescription;
     private String         branchName;
     private OffsetDateTime createdAt;
 }

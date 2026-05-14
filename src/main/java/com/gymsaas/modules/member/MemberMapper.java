@@ -31,7 +31,8 @@ public class MemberMapper {
         response.setEmail(member.getEmail());
         response.setPhone(member.getPhone());
         response.setBirthDate(member.getBirthDate());
-        response.setStatus(member.getStatus());
+        response.setStatusCode(member.getStatus().getCode());
+        response.setStatusDescription(member.getStatus().getDescription());
         response.setCreatedAt(member.getCreatedAt());
 
         if (member.getBranch() != null) {

@@ -41,14 +41,10 @@ public class Member extends BaseEntity {
     @Column(name = "birth_date")
     private LocalDate birthDate;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false, length = 20)
-    private MemberStatus status = MemberStatus.ACTIVE;
-
     @Column(columnDefinition = "TEXT")
     private String notes;
 
-    public enum MemberStatus {
-        ACTIVE, SUSPENDED, CANCELLED
-    }
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "status_id", nullable = false)
+    private MemberStatus status;
 }

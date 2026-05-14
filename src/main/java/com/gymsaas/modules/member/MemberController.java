@@ -29,12 +29,12 @@ public class MemberController {
     @GetMapping
     @PreAuthorize("hasAnyRole('OWNER','ADMIN','STAFF')")
     public ResponseEntity<ApiResponse<Page<MemberResponse>>> findAll(
-            @RequestParam(defaultValue = "ACTIVE") Member.MemberStatus status,
+            @RequestParam(defaultValue = "ACTIVE") String statusCode,
             Pageable pageable) {
 
         UUID gymId = GymContextHolder.getRequired();
         return ResponseEntity.ok(
-                ApiResponse.ok(memberService.findAll(gymId, status, pageable)));
+                ApiResponse.ok(memberService.findAll(gymId, statusCode, pageable)));
     }
 
     @Operation(summary = "Buscar socios")

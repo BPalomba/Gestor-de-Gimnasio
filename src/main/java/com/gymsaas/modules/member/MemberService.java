@@ -25,10 +25,23 @@ public class MemberService {
     private final GymRepository     gymRepository;
     private final BranchRepository  branchRepository;
     private final MemberMapper      mapper;
+    private final MemberStatusRepository memberStatusRepository;
+
+    private MemberStatus getStatus(String code) {
+        return memberStatusRepository.findByCodeAndActiveTrue(code)
+                .orElseThrow(() -> new BusinessException(
+                        "Estado no encontrado: " + code));
+    }
 
     public Page<MemberResponse> findAll(UUID gymId,
-                                        Member.MemberStatus status,
+                                        String statusCode,
                                         Pageable pageable) {
+
+        MemberStatus status = memberStatusRepository
+                .findByCodeAndActiveTrue(statusCode)
+                .orElseThrow(() -> new BusinessException(
+                        "Estado no encontrado: " + statusCode));
+
         return memberRepository
                 .findByGymIdAndStatus(gymId, status, pageable)
                 .map(mapper::toResponse);
@@ -105,14 +118,14 @@ public class MemberService {
                 .orElseThrow(() -> new BusinessException(
                         "Socio no encontrado", HttpStatus.NOT_FOUND));
 
-        if (member.getStatus() == Member.MemberStatus.CANCELLED) {
+        if (member.getStatus().getCode().equals("CANCELLED")) {
             throw new BusinessException("No se puede suspender un socio cancelado");
         }
-        if (member.getStatus() == Member.MemberStatus.SUSPENDED) {
+        if (member.getStatus().getCode().equals("SUSPENDED")) {
             throw new BusinessException("El socio ya está suspendido");
         }
 
-        member.setStatus(Member.MemberStatus.SUSPENDED);
+        member.setStatus(getStatus("SUSPENDED"));
     }
 
     @Transactional
@@ -122,13 +135,13 @@ public class MemberService {
                 .orElseThrow(() -> new BusinessException(
                         "Socio no encontrado", HttpStatus.NOT_FOUND));
 
-        if (member.getStatus() == Member.MemberStatus.CANCELLED) {
+        if (member.getStatus().getCode().equals("CANCELLED")) {
             throw new BusinessException(
                     "No se puede reactivar un socio cancelado, " +
                             "debe registrarse nuevamente");
         }
 
-        member.setStatus(Member.MemberStatus.ACTIVE);
+        member.setStatus(getStatus("ACTIVE"));
     }
 
     @Transactional
@@ -138,10 +151,10 @@ public class MemberService {
                 .orElseThrow(() -> new BusinessException(
                         "Socio no encontrado", HttpStatus.NOT_FOUND));
 
-        if (member.getStatus() == Member.MemberStatus.CANCELLED) {
+        if (member.getStatus().getCode().equals("CANCELLED")) {
             throw new BusinessException("El socio ya está cancelado");
         }
 
-        member.setStatus(Member.MemberStatus.CANCELLED);
+        member.setStatus(getStatus("CANCELLED"));
     }
 }

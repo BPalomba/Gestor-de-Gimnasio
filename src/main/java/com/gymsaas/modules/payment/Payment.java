@@ -39,9 +39,6 @@ public class Payment extends BaseEntity {
     @Column(name = "payment_method", nullable = false, length = 20)
     private PaymentMethod paymentMethod;
 
-    @Column(name = "payment_date", nullable = false)
-    private LocalDate paymentDate;
-
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)
     private PaymentStatus status = PaymentStatus.COMPLETED;

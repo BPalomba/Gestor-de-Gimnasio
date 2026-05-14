@@ -12,7 +12,7 @@ public interface MemberRepository extends JpaRepository<Member, UUID> {
 
     Page<Member> findByGymIdAndStatus(
             UUID gymId,
-            Member.MemberStatus status,
+            MemberStatus status,
             Pageable pageable
     );
 
@@ -20,7 +20,7 @@ public interface MemberRepository extends JpaRepository<Member, UUID> {
 
     boolean existsByGymIdAndDni(UUID gymId, String dni);
 
-    long countByGymIdAndStatus(UUID gymId, Member.MemberStatus status);
+    long countByGymIdAndStatus(UUID gymId, MemberStatus status);
 
     @Query("SELECT m FROM Member m WHERE m.gym.id = :gymId " +
             "AND (LOWER(m.firstName) LIKE LOWER(CONCAT('%',:q,'%')) " +

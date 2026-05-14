@@ -2,6 +2,8 @@ package com.gymsaas.modules.membership;
 
 import com.gymsaas.modules.member.Member;
 import com.gymsaas.modules.member.MemberRepository;
+import com.gymsaas.modules.member.MemberStatus;
+import com.gymsaas.modules.member.MemberStatusRepository;
 import com.gymsaas.modules.membership.dto.CreateMembershipRequest;
 import com.gymsaas.modules.membership.dto.FreezeMembershipRequest;
 import com.gymsaas.modules.membership.dto.MembershipResponse;
@@ -26,6 +28,7 @@ public class MembershipService {
     private final MemberRepository     memberRepository;
     private final PlanRepository       planRepository;
     private final MembershipMapper     mapper;
+    private final MemberStatusRepository memberStatusRepository;
 
     public MembershipResponse findById(UUID gymId, UUID membershipId) {
         return membershipRepository.findByIdAndGymId(membershipId, gymId)
@@ -68,7 +71,7 @@ public class MembershipService {
                         "Socio no encontrado", HttpStatus.NOT_FOUND));
 
         // 2. Verificar que el socio no esté cancelado
-        if (member.getStatus() == Member.MemberStatus.CANCELLED) {
+        if (member.getStatus().getCode().equals("CANCELLED")) {
             throw new BusinessException(
                     "No se puede crear una membresía para un socio cancelado");
         }
@@ -113,8 +116,11 @@ public class MembershipService {
         membership.setNotes(req.getNotes());
 
         // 7. Activar el socio si estaba suspendido
-        if (member.getStatus() == Member.MemberStatus.SUSPENDED) {
-            member.setStatus(Member.MemberStatus.ACTIVE);
+        if (member.getStatus().getCode().equals("SUSPENDED")) {
+            MemberStatus active = memberStatusRepository
+                    .findByCodeAndActiveTrue("ACTIVE")
+                    .orElseThrow(() -> new BusinessException("Estado ACTIVE no encontrado"));
+            member.setStatus(active);
         }
 
         Membership saved = membershipRepository.save(membership);
@@ -186,6 +192,11 @@ public class MembershipService {
         }
 
         ms.setStatus(Membership.MembershipStatus.CANCELLED);
-        ms.getMember().setStatus(Member.MemberStatus.SUSPENDED);
+
+        // Suspender el socio
+        MemberStatus suspended = memberStatusRepository
+                .findByCodeAndActiveTrue("SUSPENDED")
+                .orElseThrow(() -> new BusinessException("Estado SUSPENDED no encontrado"));
+        ms.getMember().setStatus(suspended);
     }
 }
