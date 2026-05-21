@@ -34,7 +34,7 @@ public class PaymentController {
             description = "Retorna pagos paginados entre dos fechas. Por defecto el mes actual."
     )
     @GetMapping
-    @PreAuthorize("hasAnyRole('OWNER','ADMIN')")
+    @PreAuthorize("hasAuthority('PAYMENT_VIEW')")
     public ResponseEntity<ApiResponse<Page<PaymentResponse>>> findAll(
             @Parameter(description = "Fecha desde (yyyy-MM-dd)")
             @RequestParam(required = false)
@@ -56,7 +56,7 @@ public class PaymentController {
 
     @Operation(summary = "Resumen financiero del período")
     @GetMapping("/summary")
-    @PreAuthorize("hasAnyRole('OWNER','ADMIN')")
+    @PreAuthorize("hasAuthority('PAYMENT_VIEW')")
     public ResponseEntity<ApiResponse<PaymentSummaryResponse>> getSummary(
             @RequestParam(required = false)
             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate from,
@@ -74,7 +74,7 @@ public class PaymentController {
 
     @Operation(summary = "Obtener pago por ID")
     @GetMapping("/{id}")
-    @PreAuthorize("hasAnyRole('OWNER','ADMIN')")
+    @PreAuthorize("hasAuthority('PAYMENT_VIEW')")
     public ResponseEntity<ApiResponse<PaymentResponse>> findById(
             @PathVariable UUID id) {
         UUID gymId = GymContextHolder.getRequired();
@@ -87,7 +87,7 @@ public class PaymentController {
             description = "Retorna todos los pagos de un socio ordenados por fecha descendente."
     )
     @GetMapping("/member/{memberId}")
-    @PreAuthorize("hasAnyRole('OWNER','ADMIN','STAFF')")
+    @PreAuthorize("hasAuthority('PAYMENT_VIEW')")
     public ResponseEntity<ApiResponse<List<PaymentResponse>>> findByMember(
             @PathVariable UUID memberId) {
         return ResponseEntity.ok(
@@ -100,7 +100,7 @@ public class PaymentController {
                     "El revenue share se calcula automáticamente."
     )
     @PostMapping
-    @PreAuthorize("hasAnyRole('OWNER','ADMIN','STAFF')")
+    @PreAuthorize("hasAuthority('PAYMENT_CREATE')")
     public ResponseEntity<ApiResponse<PaymentResponse>> create(
             @Valid @RequestBody CreatePaymentRequest req) {
         UUID gymId = GymContextHolder.getRequired();
@@ -115,7 +115,7 @@ public class PaymentController {
                     "No es posible si el revenue share ya fue liquidado."
     )
     @PatchMapping("/{id}/refund")
-    @PreAuthorize("hasAnyRole('OWNER','ADMIN')")
+    @PreAuthorize("hasAuthority('PAYMENT_REFUND')")
     public ResponseEntity<ApiResponse<PaymentResponse>> refund(
             @PathVariable UUID id) {
         UUID gymId = GymContextHolder.getRequired();

@@ -26,7 +26,7 @@ public class PlanController {
 
     @Operation(summary = "Listar planes activos del gimnasio")
     @GetMapping
-    @PreAuthorize("hasAnyRole('OWNER','ADMIN','STAFF')")
+    @PreAuthorize("hasAuthority('PLAN_VIEW')")
     public ResponseEntity<ApiResponse<List<PlanResponse>>> findAll() {
         UUID gymId = GymContextHolder.getRequired();
         return ResponseEntity.ok(
@@ -35,7 +35,7 @@ public class PlanController {
 
     @Operation(summary = "Obtener plan por ID")
     @GetMapping("/{id}")
-    @PreAuthorize("hasAnyRole('OWNER','ADMIN','STAFF')")
+    @PreAuthorize("hasAuthority('PLAN_VIEW')")
     public ResponseEntity<ApiResponse<PlanResponse>> findById(
             @PathVariable UUID id) {
         UUID gymId = GymContextHolder.getRequired();
@@ -45,7 +45,7 @@ public class PlanController {
 
     @Operation(summary = "Crear plan de membresía")
     @PostMapping
-    @PreAuthorize("hasAnyRole('OWNER','ADMIN')")
+    @PreAuthorize("hasAuthority('PLAN_CREATE')")
     public ResponseEntity<ApiResponse<PlanResponse>> create(
             @Valid @RequestBody CreatePlanRequest req) {
         UUID gymId = GymContextHolder.getRequired();
@@ -56,7 +56,7 @@ public class PlanController {
 
     @Operation(summary = "Actualizar plan")
     @PutMapping("/{id}")
-    @PreAuthorize("hasAnyRole('OWNER','ADMIN')")
+    @PreAuthorize("hasAuthority('PLAN_EDIT')")
     public ResponseEntity<ApiResponse<PlanResponse>> update(
             @PathVariable UUID id,
             @Valid @RequestBody UpdatePlanRequest req) {
@@ -68,7 +68,7 @@ public class PlanController {
     @Operation(summary = "Desactivar plan",
             description = "No elimina el plan, lo desactiva para preservar el historial")
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('OWNER')")
+    @PreAuthorize("hasAuthority('PLAN_DEACTIVATE')")
     public ResponseEntity<Void> deactivate(@PathVariable UUID id) {
         planService.deactivate(GymContextHolder.getRequired(), id);
         return ResponseEntity.noContent().build();

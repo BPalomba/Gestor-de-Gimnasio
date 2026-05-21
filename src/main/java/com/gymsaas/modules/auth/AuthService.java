@@ -47,7 +47,7 @@ public class AuthService {
                 accessToken,
                 refreshToken,
                 user.getEmail(),
-                user.getRole().name(),
+                user.getRole().getName(),
                 user.getGym() != null ? user.getGym().getId().toString() : null
         );
     }

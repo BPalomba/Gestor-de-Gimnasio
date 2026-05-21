@@ -27,7 +27,7 @@ public class MemberController {
 
     @Operation(summary = "Listar socios")
     @GetMapping
-    @PreAuthorize("hasAnyRole('OWNER','ADMIN','STAFF')")
+    @PreAuthorize("hasAuthority('MEMBER_VIEW')")
     public ResponseEntity<ApiResponse<Page<MemberResponse>>> findAll(
             @RequestParam(defaultValue = "ACTIVE") String statusCode,
             Pageable pageable) {
@@ -39,7 +39,7 @@ public class MemberController {
 
     @Operation(summary = "Buscar socios")
     @GetMapping("/search")
-    @PreAuthorize("hasAnyRole('OWNER','ADMIN','STAFF')")
+    @PreAuthorize("hasAuthority('MEMBER_VIEW')")
     public ResponseEntity<ApiResponse<Page<MemberResponse>>> search(
             @RequestParam String q,
             Pageable pageable) {
@@ -51,7 +51,7 @@ public class MemberController {
 
     @Operation(summary = "Obtener socio por ID")
     @GetMapping("/{id}")
-    @PreAuthorize("hasAnyRole('OWNER','ADMIN','STAFF')")
+    @PreAuthorize("hasAuthority('MEMBER_VIEW')")
     public ResponseEntity<ApiResponse<MemberResponse>> findById(
             @PathVariable UUID id) {
 
@@ -62,7 +62,7 @@ public class MemberController {
 
     @Operation(summary = "Crear socio")
     @PostMapping
-    @PreAuthorize("hasAnyRole('OWNER','ADMIN')")
+    @PreAuthorize("hasAuthority('MEMBER_CREATE')")
     public ResponseEntity<ApiResponse<MemberResponse>> create(
             @Valid @RequestBody CreateMemberRequest req) {
 
@@ -74,7 +74,7 @@ public class MemberController {
 
     @Operation(summary = "Actualizar socio")
     @PutMapping("/{id}")
-    @PreAuthorize("hasAnyRole('OWNER','ADMIN')")
+    @PreAuthorize("hasAuthority('MEMBER_EDIT')")
     public ResponseEntity<ApiResponse<MemberResponse>> update(
             @PathVariable UUID id,
             @Valid @RequestBody UpdateMemberRequest req) {
@@ -86,7 +86,7 @@ public class MemberController {
 
     @Operation(summary = "Suspender socio")
     @PatchMapping("/{id}/suspend")
-    @PreAuthorize("hasAnyRole('OWNER','ADMIN')")
+    @PreAuthorize("hasAuthority('MEMBER_EDIT')")
     public ResponseEntity<Void> suspend(@PathVariable UUID id) {
         memberService.suspend(GymContextHolder.getRequired(), id);
         return ResponseEntity.noContent().build();
@@ -94,7 +94,7 @@ public class MemberController {
 
     @Operation(summary = "Reactivar socio")
     @PatchMapping("/{id}/reactivate")
-    @PreAuthorize("hasAnyRole('OWNER','ADMIN')")
+    @PreAuthorize("hasAuthority('MEMBER_EDIT')")
     public ResponseEntity<Void> reactivate(@PathVariable UUID id) {
         memberService.reactivate(GymContextHolder.getRequired(), id);
         return ResponseEntity.noContent().build();
@@ -102,7 +102,7 @@ public class MemberController {
 
     @Operation(summary = "Cancelar socio")
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('OWNER')")
+    @PreAuthorize("hasAuthority('MEMBER_CANCEL')")
     public ResponseEntity<Void> cancel(@PathVariable UUID id) {
         memberService.cancel(GymContextHolder.getRequired(), id);
         return ResponseEntity.noContent().build();

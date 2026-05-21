@@ -26,7 +26,7 @@ public class BranchController {
 
     @Operation(summary = "Listar sucursales activas")
     @GetMapping
-    @PreAuthorize("hasAnyRole('OWNER','ADMIN','STAFF')")
+    @PreAuthorize("hasAuthority('BRANCH_VIEW')")
     public ResponseEntity<ApiResponse<List<BranchResponse>>> findAll() {
         UUID gymId = GymContextHolder.getRequired();
         return ResponseEntity.ok(
@@ -35,7 +35,7 @@ public class BranchController {
 
     @Operation(summary = "Obtener sucursal por ID")
     @GetMapping("/{id}")
-    @PreAuthorize("hasAnyRole('OWNER','ADMIN','STAFF')")
+    @PreAuthorize("hasAuthority('BRANCH_VIEW')")
     public ResponseEntity<ApiResponse<BranchResponse>> findById(
             @PathVariable UUID id) {
         UUID gymId = GymContextHolder.getRequired();
@@ -45,7 +45,7 @@ public class BranchController {
 
     @Operation(summary = "Crear sucursal")
     @PostMapping
-    @PreAuthorize("hasAnyRole('OWNER','ADMIN')")
+    @PreAuthorize("hasAuthority('BRANCH_CREATE')")
     public ResponseEntity<ApiResponse<BranchResponse>> create(
             @Valid @RequestBody CreateBranchRequest req) {
         UUID gymId = GymContextHolder.getRequired();
@@ -56,7 +56,7 @@ public class BranchController {
 
     @Operation(summary = "Actualizar sucursal")
     @PutMapping("/{id}")
-    @PreAuthorize("hasAnyRole('OWNER','ADMIN')")
+    @PreAuthorize("hasAuthority('BRANCH_EDIT')")
     public ResponseEntity<ApiResponse<BranchResponse>> update(
             @PathVariable UUID id,
             @Valid @RequestBody UpdateBranchRequest req) {
@@ -67,7 +67,7 @@ public class BranchController {
 
     @Operation(summary = "Desactivar sucursal")
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('OWNER')")
+    @PreAuthorize("hasAuthority('BRANCH_DEACTIVATE')")
     public ResponseEntity<Void> deactivate(@PathVariable UUID id) {
         branchService.deactivate(GymContextHolder.getRequired(), id);
         return ResponseEntity.noContent().build();
