@@ -28,3 +28,5 @@ INSERT INTO permissions (id, code, description, module, created_at, updated_at) 
     (gen_random_uuid(), 'DASHBOARD_VIEW',    'Ver dashboard',             'DASHBOARD',   now(), now()),
     (gen_random_uuid(), 'REPORT_VIEW',       'Ver reportes financieros',  'REPORTS',     now(), now())
 ON CONFLICT (code) DO NOTHING;
+
+-- Debug --

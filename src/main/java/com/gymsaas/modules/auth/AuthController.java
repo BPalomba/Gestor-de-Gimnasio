@@ -24,4 +24,10 @@ public class AuthController {
         return ResponseEntity.ok(authService.login(request));
     }
 
+    // SOLO DESARROLLO — eliminar antes de producción
+    @GetMapping("/hash")
+    public String hash(@RequestParam String password) {
+        return passwordEncoder.encode(password);
+    }
+
 }

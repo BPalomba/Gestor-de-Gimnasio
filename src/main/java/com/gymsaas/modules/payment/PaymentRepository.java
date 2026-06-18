@@ -42,4 +42,21 @@ public interface PaymentRepository extends JpaRepository<Payment, UUID> {
     List<Payment> findPendingRevenueShare(@Param("gymId") UUID gymId);
 
     List<Payment> findByMemberIdOrderByCreatedAtDesc(UUID memberId);
+
+    // Revenue share pendiente
+    @Query("SELECT COALESCE(SUM(p.revenueShareAmount), 0) FROM Payment p " +
+            "WHERE p.gym.id = :gymId " +
+            "AND p.status = 'COMPLETED' " +
+            "AND p.revenueSharePaid = false")
+    BigDecimal sumPendingRevenueShare(@Param("gymId") UUID gymId);
+
+    // Cantidad de pagos en período
+    @Query("SELECT COUNT(p) FROM Payment p " +
+            "WHERE p.gym.id = :gymId " +
+            "AND p.status = 'COMPLETED' " +
+            "AND CAST(p.createdAt AS date) BETWEEN :from AND :to")
+    long countPaymentsByPeriod(
+            @Param("gymId") UUID gymId,
+            @Param("from") LocalDate from,
+            @Param("to") LocalDate to);
 }
