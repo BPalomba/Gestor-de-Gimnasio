@@ -23,7 +23,7 @@ public class AuthService {
 
 
         // 1. Buscar el usuario por email
-        User user = userRepository.findByEmail(request.email())
+        User user = userRepository.findByEmailForLogin(request.email())
                 .orElseThrow(() -> new BusinessException(
                         "Credenciales incorrectas", HttpStatus.UNAUTHORIZED));
 

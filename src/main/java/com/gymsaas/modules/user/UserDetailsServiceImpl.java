@@ -21,7 +21,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     // En nuestro caso el username es el UUID del usuario
     @Override
     public UserDetails loadUserByUsername(String userId) throws UsernameNotFoundException {
-        User user = userRepository.findById(UUID.fromString(userId))
+        User user = userRepository.findByIdWithPermissions(UUID.fromString(userId))
                 .orElseThrow(() -> new UsernameNotFoundException(
                         "Usuario no encontrado: " + userId));
 
