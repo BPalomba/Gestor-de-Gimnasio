@@ -77,6 +77,7 @@ public class MemberService {
 
         Member member = mapper.toEntity(req);
         member.setGym(gym);
+        member.setStatus(getStatus("ACTIVE"));  // ← AGREGAR ESTA LÍNEA
 
         // Asignar sucursal si se proporcionó
         if (req.getBranchId() != null) {
