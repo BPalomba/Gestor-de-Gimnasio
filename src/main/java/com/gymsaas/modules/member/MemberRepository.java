@@ -43,4 +43,5 @@ public interface MemberRepository extends JpaRepository<Member, UUID> {
             @Param("gymId") UUID gymId,
             @Param("from") LocalDate from,
             @Param("to") LocalDate to);
+
 }
