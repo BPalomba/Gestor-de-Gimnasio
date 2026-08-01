@@ -38,7 +38,7 @@ public class MembershipController {
         UUID gymId = GymContextHolder.getRequired();
         return ResponseEntity.ok(
                 ApiResponse.ok(membershipService.findAll(gymId, status, pageable)));
-    }g
+    }
 
     @Operation(summary = "Obtener membresía por ID")
     @GetMapping("/{id}")
