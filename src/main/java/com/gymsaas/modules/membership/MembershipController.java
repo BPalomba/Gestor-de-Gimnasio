@@ -9,10 +9,15 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springdoc.core.annotations.ParameterObject;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
+
 import java.util.List;
 import java.util.UUID;
 
@@ -23,6 +28,17 @@ import java.util.UUID;
 public class MembershipController {
 
     private final MembershipService membershipService;
+
+    @Operation(summary = "Listar todas las membresías del gimnasio con filtros")
+    @GetMapping
+    @PreAuthorize("hasAuthority('MEMBERSHIP_VIEW')")
+    public ResponseEntity<ApiResponse<Page<MembershipResponse>>> findAll(
+            @RequestParam(required = false) Membership.MembershipStatus status,
+            @ParameterObject Pageable pageable) {
+        UUID gymId = GymContextHolder.getRequired();
+        return ResponseEntity.ok(
+                ApiResponse.ok(membershipService.findAll(gymId, status, pageable)));
+    }g
 
     @Operation(summary = "Obtener membresía por ID")
     @GetMapping("/{id}")

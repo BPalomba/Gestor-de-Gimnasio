@@ -11,9 +11,12 @@ import com.gymsaas.modules.plan.Plan;
 import com.gymsaas.modules.plan.PlanRepository;
 import com.gymsaas.shared.exception.BusinessException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
@@ -199,4 +202,18 @@ public class MembershipService {
                 .orElseThrow(() -> new BusinessException("Estado SUSPENDED no encontrado"));
         ms.getMember().setStatus(suspended);
     }
+
+    public Page<MembershipResponse> findAll(UUID gymId,
+                                            Membership.MembershipStatus status,
+                                            Pageable pageable) {
+        if (status != null) {
+            return membershipRepository
+                    .findByGymIdAndStatus(gymId, status, pageable)
+                    .map(mapper::toResponse);
+        }
+        return membershipRepository
+                .findByGymId(gymId, pageable)
+                .map(mapper::toResponse);
+    }
+
 }

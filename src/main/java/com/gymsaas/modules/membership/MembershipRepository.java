@@ -1,5 +1,6 @@
 package com.gymsaas.modules.membership;
 
+import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -57,4 +58,10 @@ public interface MembershipRepository extends JpaRepository<Membership, UUID> {
     List<Object[]> findTopPlansByActiveMemberships(
             @Param("gymId") UUID gymId,
             Pageable pageable);
+
+    Page<Membership> findByGymIdAndStatus(
+            UUID gymId, Membership.MembershipStatus status, Pageable pageable);
+
+    Page<Membership> findByGymId(UUID gymId, Pageable pageable);
+
 }

@@ -2,6 +2,7 @@ package com.gymsaas.modules.auth;
 
 import com.gymsaas.modules.auth.dto.AuthResponse;
 import com.gymsaas.modules.auth.dto.LoginRequest;
+import com.gymsaas.modules.role.Permission;
 import com.gymsaas.modules.user.User;
 import com.gymsaas.modules.user.UserRepository;
 import com.gymsaas.shared.exception.BusinessException;
@@ -10,6 +11,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -43,12 +46,18 @@ public class AuthService {
         String accessToken  = jwtProvider.generateAccessToken(user);
         String refreshToken = jwtProvider.generateRefreshToken(user.getId());
 
+        List<String> permissions = user.getRole().getPermissions()
+                .stream()
+                .map(Permission::getCode)
+                .toList();
+
         return new AuthResponse(
                 accessToken,
                 refreshToken,
                 user.getEmail(),
                 user.getRole().getName(),
-                user.getGym() != null ? user.getGym().getId().toString() : null
+                user.getGym() != null ? user.getGym().getId().toString() : null,
+                permissions
         );
     }
 }
