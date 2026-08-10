@@ -16,7 +16,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Configurar Java 21
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5        # ← v5
         with:
           java-version: '21'
           distribution: 'temurin'
@@ -26,19 +26,20 @@ jobs:
         run: mvn test -Dspring.profiles.active=test
 
       - name: Publicar resultados de tests
-        uses: dorny/test-reporter@v1
+        uses: dorny/test-reporter@v2       # ← v2
         if: always()
         with:
           name: JUnit Tests
           path: target/surefire-reports/*.xml
           reporter: java-junit
+          fail-on-error: true
 
       - name: Build del JAR
-        if: github.ref == 'refs/heads/main'
+        if: github.ref == 'refs/heads/main' && success()
         run: mvn clean package -DskipTests
 
       - name: Subir JAR como artefacto
-        if: github.ref == 'refs/heads/main'
+        if: github.ref == 'refs/heads/main' && success()
         uses: actions/upload-artifact@v4
         with:
           name: gymsaas-jar
