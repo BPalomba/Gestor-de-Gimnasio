@@ -16,6 +16,7 @@ public class CorsConfig {
 
         // Orígenes permitidos — urls frontend
         config.setAllowedOrigins(List.of(
+                "http://localhost",
                 "http://localhost:3000",   // React dev
                 "http://localhost:5173",   // Vite dev
                 "http://localhost:4200"    // Angular dev
